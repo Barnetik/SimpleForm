@@ -63,9 +63,19 @@ class ChoiceField extends AbstractField {
 
             $html = '<select ' . $this->getAttributes() . '>';
 
-            foreach($this->_options["choices"] as $value=>$label){
-                $html .= '<option' . ($value == $this->getValue() ? ' selected="selected"' : '') .
-                         ' value="' . $value . '">' . $label .
+            foreach($this->_options["choices"] as $value=>$data){
+                if (is_array($data)) {
+                    $label = $data['label'];
+                } else {
+                    $label = $data;
+                }
+                $html .= '<option' . ($value == $this->getValue() ? ' selected="selected"' : '');
+                if (isset($data['data']) && is_array($data['data'])) {
+                    foreach ($data['data'] as $dataKey => $dataValue) {
+                        $html .= ' data-' . $dataKey . '="' .  $dataValue . '"';
+                    }
+                }
+                $html .= ' value="' . $value . '">' . $label .
                          '</option>';
             }
 
@@ -149,4 +159,4 @@ class ChoiceField extends AbstractField {
 
 
 
-} 
+}
